@@ -1,0 +1,31 @@
+# Color utility (move to it's own module? or replace with Color.jl)
+decodecolor{T<:Real,R<:Real}(c::Array{T,1}=[0.,0.,0.],f::Array{R,1}=[1.,1.,1.])=(c[1:3],f[1:3])
+decodecolor{T<:Real,R<:Real}(c::Array{T,1},f::R)=decodecolor(c,(1-f)*c[1:3]+f*[1,1,1])
+decodecolor(c::Real,f)=decodecolor([c,c,c],f)
+function decodecolor(color::AbstractString,face) # these color are consistent with matplotlib's values
+    markercolor=[0.,0.,0.] # set a default color
+    (color=="r"||color=="red")    && (markercolor=[1.00,0.00,0.00])
+    (color=="o"||color=="orange") && (markercolor=[1.00,0.50,0.00])
+    (color=="y"||color=="yellow") && (markercolor=[0.75,0.75,0.00])
+    (color=="g"||color=="green")  && (markercolor=[0.00,0.50,0.00])
+    (color=="b"||color=="blue")   && (markercolor=[0.00,0.00,1.00])
+    (color=="darkindigo")         && (markercolor=[0.00,0.50,1.00])
+    (color=="i"||color=="indigo") && (markercolor=[0.20,0.70,1.00])
+    (color=="v"||color=="violet") && (markercolor=[0.58,0.00,0.83])
+    (color=="k"||color=="black")  && (markercolor=[0.00,0.00,0.00])
+    (color=="w"||color=="white")  && (markercolor=[1.00,1.00,1.00])
+    (color=="c"||color=="cyan")   && (markercolor=[0.00,0.75,0.75])
+    (color=="m"||color=="magenta")&& (markercolor=[0.75,0.00,0.75])
+    (color=="a"||color=="gray")   && (markercolor=[0.85,0.85,0.85])
+    decodecolor(markercolor,face)
+end
+function decodecolor{T<:Real}(c::Array{T,1},f::AbstractString)
+    facecolor="none"
+    (f=="c"||f=="clear"||f=="empty"||f=="none")&&(facecolor="none")
+    (f=="l"||f=="light") &&(facecolor=0.2*c+0.8*[1,1,1])
+    (f=="m"||f=="medium")&&(facecolor=0.5*c+0.5*[1,1,1])
+    (f=="d"||f=="dark")  &&(facecolor=0.7*c+0.3*[1,1,1])
+    (f=="f"||f=="full"||f=="filled")&&(facecolor=c)
+    (f=="w"||f=="white") &&(facecolor=[1.0,1.0,1.0])
+    decodecolor(c,facecolor)
+end
